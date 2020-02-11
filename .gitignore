@@ -1,0 +1,5 @@
+.eos-dev/
+.libs/
+tags
+build/
+node_modules/
