@@ -1,0 +1,3 @@
+[submodule "libs/eEVM"]
+	path = libs/eEVM
+	url = https://github.com/algys/eEVM
