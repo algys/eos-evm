@@ -11,9 +11,11 @@
 namespace eos_evm
 {
 
-struct EosAccountRow
+//struct
+//TABLE
+struct [[eosio::table]] EosAccountRow
 {
-    Address address;
+    EosUint256_t address;
     eevm::Account::Nonce nonce;
     eosio::asset balance;
 
@@ -28,7 +30,8 @@ typedef eosio::multi_index<
 > EosAccountTable;
 
 
-struct EosCodeRow
+//struct
+TABLE EosCodeRow
 {
     eevm::Code code;
 

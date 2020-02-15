@@ -5,4 +5,4 @@ eos-tester cleos --wallet-url=http://localhost:6666 create account eosio evm EOS
 eos-tester cleos --wallet-url=http://localhost:6666 set code evm /host/build/hello.wasm
 
 # set evm contract abi
-eos-tester cleos --wallet-url=http://localhost:6666 set abi evm /host/hello.abi
+eos-tester cleos --wallet-url=http://localhost:6666 set abi evm /host/build/hello.abi

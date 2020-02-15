@@ -25,9 +25,13 @@ set(EEVM_EOS_SRCS
    "${CMAKE_CURRENT_SOURCE_DIR}/src/account.cpp"
    "${CMAKE_CURRENT_SOURCE_DIR}/src/global_state.cpp"
    "${CMAKE_CURRENT_SOURCE_DIR}/src/storage.cpp"
+   "${CMAKE_CURRENT_SOURCE_DIR}/src/types.cpp"
 )
 
 add_executable(hello.wasm src/hello.cpp ${EEVM_EOS_SRCS})
 target_link_libraries(hello.wasm eevm)
 
+target_compile_options(hello.wasm PUBLIC "-abigen")
+target_compile_options(hello.wasm PUBLIC "-abigen_output=./hello.abi")
+target_compile_options(hello.wasm PUBLIC "-contract=hello")
 target_compile_options(hello.wasm PUBLIC "-lto-opt=O3 -fmerge-all-constants")

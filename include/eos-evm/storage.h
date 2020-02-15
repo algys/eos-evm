@@ -11,7 +11,8 @@ namespace eos_evm
 {
 
 
-struct EosStorageRow
+//struct
+TABLE EosStorageRow
 {
     EosUint256_t key; // real key;
     EosUint256_t value; // value

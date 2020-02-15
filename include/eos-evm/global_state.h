@@ -12,13 +12,14 @@ namespace eos_evm
 {
 
 
-struct EosAccountMapRow
+//struct
+TABLE EosAccountMapRow
 {
     eosio::name eos_account;
-    Address evm_address;
+    EosUint256_t evm_address;
 
     uint64_t primary_key() const { return eos_account.value; }
-    Address get_evm_address() const { return evm_address; }
+    EosUint256_t get_evm_address() const { return evm_address; }
 
     EOSLIB_SERIALIZE(EosAccountMapRow, (eos_account)(evm_address))
 };
@@ -26,15 +27,12 @@ struct EosAccountMapRow
 typedef eosio::multi_index<
     "accmap"_n,
     EosAccountMapRow,
-    eosio::indexed_by<"address"_n, eosio::const_mem_fun<EosAccountMapRow, Address, &EosAccountMapRow::get_evm_address> >
+    eosio::indexed_by<"address"_n, eosio::const_mem_fun<EosAccountMapRow, EosUint256_t, &EosAccountMapRow::get_evm_address> >
 > EosAccountMapTable;
 
 
 class EosGlobalState : public eevm::GlobalState
 {
-public:
-    using StateEntry = std::pair<EosAccount, EosStorage>;
-
 private:
     eevm::Block currentBlock;
 

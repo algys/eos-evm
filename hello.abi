@@ -1,14 +1,74 @@
 {
-    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Tue Feb 11 20:58:01 2020",
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Sat Feb 15 10:09:44 2020",
     "version": "eosio::abi/1.1",
     "structs": [
         {
-            "name": "create",
+            "name": "EosAccountMapRow_",
             "base": "",
             "fields": [
                 {
-                    "name": "hello",
-                    "type": "string"
+                    "name": "eos_account",
+                    "type": "name"
+                },
+                {
+                    "name": "evm_address",
+                    "type": "checksum256"
+                }
+            ]
+        },
+        {
+            "name": "EosAccountRow_",
+            "base": "",
+            "fields": [
+                {
+                    "name": "address",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "nonce",
+                    "type": "size_t"
+                },
+                {
+                    "name": "balance",
+                    "type": "asset"
+                }
+            ]
+        },
+        {
+            "name": "EosCodeRow_",
+            "base": "",
+            "fields": [
+                {
+                    "name": "code",
+                    "type": "uint8[]"
+                }
+            ]
+        },
+        {
+            "name": "EosStorageRow_",
+            "base": "",
+            "fields": [
+                {
+                    "name": "key",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "value",
+                    "type": "checksum256"
+                }
+            ]
+        },
+        {
+            "name": "deploy",
+            "base": "",
+            "fields": [
+                {
+                    "name": "eos_acc",
+                    "type": "name"
+                },
+                {
+                    "name": "evm_acc",
+                    "type": "uint8"
                 }
             ]
         },
@@ -21,22 +81,71 @@
                     "type": "name"
                 }
             ]
+        },
+        {
+            "name": "run",
+            "base": "",
+            "fields": [
+                {
+                    "name": "evm_acc",
+                    "type": "uint8"
+                }
+            ]
         }
     ],
-    "types": [],
+    "types": [
+        {
+            "new_type_name": "size_t",
+            "type": "uint32"
+        }
+    ],
     "actions": [
         {
-            "name": "create",
-            "type": "create",
+            "name": "deploy",
+            "type": "deploy",
             "ricardian_contract": ""
         },
         {
             "name": "hi",
             "type": "hi",
             "ricardian_contract": ""
+        },
+        {
+            "name": "run",
+            "type": "run",
+            "ricardian_contract": ""
         }
     ],
-    "tables": [],
+    "tables": [
+        {
+            "name": "accmap",
+            "type": "EosAccountMapRow_",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "account",
+            "type": "EosAccountRow_",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "code",
+            "type": "EosCodeRow_",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "storage",
+            "type": "EosStorageRow_",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
     "ricardian_clauses": [],
     "variants": [],
     "abi_extensions": []

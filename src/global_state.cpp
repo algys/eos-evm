@@ -25,10 +25,10 @@ eevm::AccountState EosGlobalState::get(const eevm::Address& address)
         return create(address, 0, {});
 
     auto eos_name = get_eos_name_by_address(address);
-    EosAccount account(evm_contract, eos_name);
-    EosStorage storage(evm_contract, eos_name);
+    EosAccount* account = new EosAccount(evm_contract, eos_name);
+    EosStorage* storage = new EosStorage (evm_contract, eos_name);
 
-    return StateEntry { account, storage };
+    return eevm::AccountState(*account, *storage);
 }
 
 eevm::AccountState EosGlobalState::create(
@@ -38,19 +38,21 @@ eevm::AccountState EosGlobalState::create(
     const eevm::Code& code
 )
 {
+    eosio::print_f("INVOKED create\n");
     if (exists(address))
         return get(address);
 
-    EosAccount account(evm_contract, eos_account);
-    EosStorage storage(evm_contract, eos_account);
-    account.create(address, balance, code);
+    EosAccount* account = new EosAccount(evm_contract, eos_account);
+    EosStorage* storage = new EosStorage(evm_contract, eos_account);
+    account->create(address, balance, code);
 
     acc_map_table.emplace(evm_contract, [&](auto& row){
         row.eos_account = eos_account;
         row.evm_address = convert(address);
     });
 
-    return StateEntry { account, storage };
+
+    return eevm::AccountState(*account, *storage);
 }
 
 bool EosGlobalState::exists(const eevm::Address& address)
