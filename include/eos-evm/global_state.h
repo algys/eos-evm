@@ -6,6 +6,7 @@
 #include <eos-evm/account.h>
 
 #include <eosiolib/eosio.hpp>
+#include <eosiolib/transaction.h>
 
 
 namespace eos_evm
@@ -33,15 +34,20 @@ typedef eosio::multi_index<
 
 class EosGlobalState : public eevm::GlobalState
 {
-private:
-    eevm::Block currentBlock;
-
 public:
     EosGlobalState() = delete;
     EosGlobalState(eosio::name evm_contract_):
         evm_contract(evm_contract_),
         acc_map_table(evm_contract_, evm_contract.value)
-    { }
+    {
+        cur_block = eevm::Block {
+            static_cast<uint64_t>(tapos_block_num()), // number, for now unavailable to fetch real block num
+            0u, // difficulty
+            0xfffffff, // gas limit
+            current_time(), // timestamp
+            0u // coinbase
+        };
+    }
 
     virtual void remove(const eevm::Address& address) override;
 
@@ -60,7 +66,6 @@ public:
     ) override {};
 
     bool exists(const eevm::Address& address);
-    size_t num_accounts();
 
     virtual const eevm::Block& get_current_block() override;
     virtual uint256_t get_block_hash(uint8_t offset) override;
@@ -68,6 +73,7 @@ public:
 private:
     eosio::name evm_contract;
     EosAccountMapTable acc_map_table;
+    eevm::Block cur_block;
 
 private:
     eosio::name get_eos_name_by_address(const eevm::Address& addr) const;

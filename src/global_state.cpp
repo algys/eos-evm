@@ -63,14 +63,9 @@ bool EosGlobalState::exists(const eevm::Address& address)
     return itr != idx.end();
 }
 
-size_t EosGlobalState::num_accounts()
-{
-    return 2; //TODO
-}
-
 const eevm::Block& EosGlobalState::get_current_block()
 {
-    return currentBlock;
+    return cur_block;
 }
 
 uint256_t EosGlobalState::get_block_hash(uint8_t offset)
