@@ -2,7 +2,7 @@
 
 #include <eEVM/account.h>
 
-#include <eosiolib/eosio.hpp>
+#include <eosio/eosio.hpp>
 
 
 namespace eos_evm

@@ -1,6 +1,6 @@
 #include <eEVM/util.h>
 
-#include <eosiolib/eosio.hpp>
+#include <eosio/eosio.hpp>
 
 #include <eos-evm/storage.h>
 
