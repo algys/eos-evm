@@ -5,6 +5,7 @@
 
 #include <eEVM/processor.h>
 #include <eEVM/opcode.h>
+#include <eEVM/rlp.h>
 
 #include <eos-evm/evm/global_state.h>
 #include <eos-evm/evm/account.h>
@@ -24,32 +25,32 @@ struct evm_trx_type {
     uint256_t v,r,s;
 };
 
-using evm_trx_tuple_type = std::tuple<
-    uint256_t, //nonce
-    uint256_t, //gas_price
-    uint256_t, //gas_limit
-    uint256_t, //to
-    uint256_t, //value
-    std::vector<uint8_t>, //data
-    uint256_t, //v
-    uint256_t, //r
-    uint256_t  //s
->;
+evm_trx_type decode_raw_trx(const std::vector<char>& bytes) {
+    const uint8_t* data = (uint8_t*)bytes.data();
+    size_t size = bytes.size();
 
-evm_trx decode_raw_trx(const std::vector<uint8_t>& bytes) {
-    auto evm_trx_tuple = evm::rlp::decode<evm_trx_tuple_type>(bytes);
+    auto evm_trx_tuple = eevm::rlp::decode<
+        uint256_t, //nonce
+        uint256_t, //gas_price
+        uint256_t, //gas_limit
+        uint256_t, //to
+        uint256_t, //value
+        std::vector<uint8_t>, //data
+        uint256_t, //v
+        uint256_t, //r
+        uint256_t  //s
+    >(data, size);
 
-    return evm_trx {
-        evm_trx_tuple.get<0>,
-        evm_trx_tuple.get<1>,
-        evm_trx_tuple.get<2>,
-        evm_trx_tuple.get<3>,
-        evm_trx_tuple.get<4>,
-        evm_trx_tuple.get<5>,
-        evm_trx_tuple.get<6>,
-        evm_trx_tuple.get<7>,
-        evm_trx_tuple.get<8>,
-        evm_trx_tuple.get<9>
+    return evm_trx_type {
+        std::get<0>(evm_trx_tuple),
+        std::get<1>(evm_trx_tuple),
+        std::get<2>(evm_trx_tuple),
+        std::get<3>(evm_trx_tuple),
+        std::get<4>(evm_trx_tuple),
+        std::get<5>(evm_trx_tuple),
+        std::get<6>(evm_trx_tuple),
+        std::get<7>(evm_trx_tuple),
+        std::get<8>(evm_trx_tuple)
     };
 }
 
@@ -87,75 +88,45 @@ public:
     using contract::contract;
 
     [[eosio::action]]
-    void raw(const std::vector<uint8_t>& raw_trx) {
+    void raw(const std::vector<char>& raw_trx) {
+        // decode RLP transaction
         auto trx = decode_raw_trx(raw_trx);
 
-        eosio::print(eos_evm::convert(trx.to));
-    }
-
-
-    [[eosio::action]]
-    void deploy(eosio::name eos_acc, uint8_t evm_acc) {
-        // Check auth
-        require_auth(eos_acc);
-
-        // Generate EVM code
-        const eevm::Code code = create_bytecode(eos_acc.to_string() + ", Hello from EVM !");
-
-        // Create to address
+        //TODO check sign & recover sender
+        // Sender mock
         std::vector<uint8_t> raw_address(20);
-        raw_address[19] = evm_acc;
-        const eevm::Address to = eevm::from_big_endian(raw_address.data(), raw_address.size());
-
-        // Create global state
-        eos_evm::EosGlobalState gs(_self);
-
-        // Create contract
-        const eevm::AccountState contract = gs.create(eos_acc, to, 0, code);
-
-        eosio::print_f("DEPLOYED\n");
-    }
-
-    [[eosio::action]]
-    void run(uint8_t evm_acc) {
-        // Create to address
-        std::vector<uint8_t> raw_address(20);
-        raw_address[19] = evm_acc;
-        const eevm::Address to = eevm::from_big_endian(raw_address.data(), raw_address.size());
-
-        //Create sender address [DUMMY]
         raw_address[4] = 4;
         const eevm::Address sender = eevm::from_big_endian(raw_address.data(), raw_address.size());
 
         // Create global state
         eos_evm::EosGlobalState gs(_self);
 
-        // Create contract
-        const eevm::AccountState contract = gs.get(to);
+        // Check `to` account
+        eosio::check(gs.exists(trx.to), "'to' account doesn't exists");
 
-        // Create transaction
+        // Fetch `to` account
+        const eevm::AccountState contract = gs.get(trx.to);
+
+        // Create eEVM transaction
         eevm::NullLogHandler ignore;
-        eevm::Transaction tx(sender, ignore);
+        // TODO fix uint64_t
+        eevm::Transaction tx(sender, ignore, (uint64_t)trx.value, (uint64_t)trx.gas_price, (uint64_t)trx.gas_limit);
 
         // Create processor
         eevm::Processor p(gs);
 
-        // Execute code. All execution is associated with a transaction. This
-        // transaction is called by sender, executing the code in contract, with empty
-        // input (and no trace collection)
-        const eevm::ExecResult e = p.run(tx, sender, contract, {}, 0, nullptr);
+        // Exec transaction
+        const eevm::ExecResult e = p.run(tx, sender, contract, trx.data, 0, nullptr);
 
         // Check the response
         if (e.er != eevm::ExitReason::returned) {
-            eosio::print_f("uexpected return code: %\n", (size_t)e.er);
-            return;
+            eosio::check(false, "EVM error"); //TODO detailed error
         }
 
-        // Create string from response data, and print it
+        // Create string from response data, and print it TODO normal print
         const std::string response(reinterpret_cast<const char*>(e.output.data()));
-
-        eosio::print_f("ok: %\n", response.data());
+        eosio::print_f("result: %\n", response.data());
     }
 };
 
-EOSIO_DISPATCH(hello, (hi)(deploy)(run))
+EOSIO_DISPATCH(evm, (raw))
