@@ -2,7 +2,7 @@
 
 #include <eosiolib/eosio.hpp>
 
-#include <eos-evm/storage.h>
+#include <eos-evm/evm/storage.h>
 
 
 namespace eos_evm

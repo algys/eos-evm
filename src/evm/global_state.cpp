@@ -1,4 +1,4 @@
-#include <eos-evm/global_state.h>
+#include <eos-evm/evm/global_state.h>
 
 #include <eosiolib/eosio.hpp>
 

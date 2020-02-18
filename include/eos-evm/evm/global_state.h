@@ -2,8 +2,8 @@
 
 #include <eEVM/globalstate.h>
 
-#include <eos-evm/storage.h>
-#include <eos-evm/account.h>
+#include <eos-evm/evm/storage.h>
+#include <eos-evm/evm/account.h>
 
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/transaction.h>

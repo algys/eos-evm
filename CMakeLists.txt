@@ -6,26 +6,18 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-cpp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-cpp")
 
 add_subdirectory(libs/eEVM)
+
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/libs/eEVM/include"
                     "${CMAKE_CURRENT_SOURCE_DIR}/libs/eEVM/3rdparty/intx/include"
                     "${CMAKE_CURRENT_SOURCE_DIR}/libs/eEVM/3rdparty"
                     "${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 
-#set(SRC_FILES libs/bls/src/bls_c384.cpp libs/mcl/src/fp.cpp)
-#add_executable(hello.wasm src/hello.cpp ${SRC_FILES})
-
-set(EEVM_SIMPLE_SRCS
-   "${CMAKE_CURRENT_SOURCE_DIR}/libs/eEVM/src/simple/simpleaccount.cpp"
-   "${CMAKE_CURRENT_SOURCE_DIR}/libs/eEVM/src/simple/simpleglobalstate.cpp"
-   "${CMAKE_CURRENT_SOURCE_DIR}/libs/eEVM/src/simple/simplestorage.cpp"
-)
-
 set(EEVM_EOS_SRCS
-   "${CMAKE_CURRENT_SOURCE_DIR}/src/account.cpp"
-   "${CMAKE_CURRENT_SOURCE_DIR}/src/global_state.cpp"
-   "${CMAKE_CURRENT_SOURCE_DIR}/src/storage.cpp"
-   "${CMAKE_CURRENT_SOURCE_DIR}/src/types.cpp"
+   "${CMAKE_CURRENT_SOURCE_DIR}/src/evm/account.cpp"
+   "${CMAKE_CURRENT_SOURCE_DIR}/src/evm/global_state.cpp"
+   "${CMAKE_CURRENT_SOURCE_DIR}/src/evm/storage.cpp"
+   "${CMAKE_CURRENT_SOURCE_DIR}/src/evm/types.cpp"
 )
 
 add_executable(hello.wasm src/hello.cpp ${EEVM_EOS_SRCS})

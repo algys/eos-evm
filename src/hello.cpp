@@ -6,10 +6,10 @@
 #include <eEVM/processor.h>
 #include <eEVM/opcode.h>
 
-#include <eos-evm/global_state.h>
+#include <eos-evm/evm/global_state.h>
+#include <eos-evm/evm/account.h>
+#include <eos-evm/evm/storage.h>
 
-#include <eos-evm/account.h>
-#include <eos-evm/storage.h>
 
 using namespace eosio;
 

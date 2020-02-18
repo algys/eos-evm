@@ -1,4 +1,5 @@
-#include <eos-evm/types.h>
+#include <eos-evm/evm/types.h>
+
 
 namespace eos_evm
 {
