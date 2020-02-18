@@ -1,6 +1,6 @@
 find_package(eosio.cdt)
 
-set(CMAKE_AR "/usr/opt/eosio.cdt/1.4.1/bin/eosio-ar")
+set(CMAKE_AR "/usr/local/bin/eosio-ar")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-cpp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-cpp")
