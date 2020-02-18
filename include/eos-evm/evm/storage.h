@@ -2,7 +2,7 @@
 
 #include <eEVM/storage.h>
 
-#include <eosiolib/eosio.hpp>
+#include <eosio/eosio.hpp>
 
 #include <eos-evm/evm/types.h>
 
