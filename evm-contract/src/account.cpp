@@ -20,6 +20,7 @@ void EosAccount::create(
 {
     account_table.emplace(evm_contract, [&](auto& row){
         row.address = convert(address);
+        row.nonce = 1;
         row.balance.set_amount((uint64_t)balance);
     });
 

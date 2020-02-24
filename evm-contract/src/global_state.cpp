@@ -63,6 +63,10 @@ bool EosGlobalState::exists(const eevm::Address& address)
     return itr != idx.end();
 }
 
+bool EosGlobalState::exists(const eosio::name& account) {
+    return acc_map_table.find(account.value) != acc_map_table.end();
+}
+
 const eevm::Block& EosGlobalState::get_current_block()
 {
     return cur_block;

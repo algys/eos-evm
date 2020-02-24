@@ -6,14 +6,14 @@
 #include <eEVM/processor.h>
 #include <eEVM/opcode.h>
 #include <eEVM/rlp.h>
+#include <eEVM/util.h>
 
 #include <eos-evm/evm/global_state.h>
 #include <eos-evm/evm/account.h>
 #include <eos-evm/evm/storage.h>
 
-
 using namespace eosio;
-
+using namespace eevm;
 
 struct evm_trx_type {
     uint256_t nonce;
@@ -127,6 +127,17 @@ public:
         const std::string response(reinterpret_cast<const char*>(e.output.data()));
         eosio::print_f("result: %\n", response.data());
     }
+
+    [[eosio::action]]
+    void create(const name& creator, const std::string& input_string) {
+        require_auth(creator);
+        eos_evm::EosGlobalState gs(_self);
+        const auto keccak_hash = keccak_256(rlp::encode(creator.to_string(), input_string));
+        const std::string rightmost_bytes(keccak_hash.begin(), keccak_hash.begin() + 20);
+        Address eth_address = to_uint256(rightmost_bytes);
+        check(gs.exists(eth_address), "creator account already exists");
+        gs.create(eth_address, 0, {});
+    }
 };
 
-EOSIO_DISPATCH(evm, (raw))
+EOSIO_DISPATCH(evm, (raw)(create))

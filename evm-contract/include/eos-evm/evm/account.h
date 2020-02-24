@@ -7,6 +7,7 @@
 
 #include <eos-evm/evm/types.h>
 
+using namespace eosio;
 
 namespace eos_evm
 {
@@ -20,13 +21,15 @@ struct [[eosio::table]] EosAccountRow
     eosio::asset balance;
 
     uint64_t primary_key() const { return 0; }
+    EosUint256_t get_evm_address() const { return address; }
 
     EOSLIB_SERIALIZE(eos_evm::EosAccountRow, (address)(nonce)(balance))
 };
 
 typedef eosio::multi_index<
     "account"_n,
-    EosAccountRow
+    EosAccountRow,
+    eosio::indexed_by<"address"_n, eosio::const_mem_fun<EosAccountRow, EosUint256_t, &EosAccountRow::get_evm_address> >
 > EosAccountTable;
 
 

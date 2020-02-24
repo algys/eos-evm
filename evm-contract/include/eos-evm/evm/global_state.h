@@ -6,6 +6,7 @@
 #include <eos-evm/evm/account.h>
 
 #include <eosio/eosio.hpp>
+#include <eosio/name.hpp>
 #include <eosio/transaction.hpp>
 
 
@@ -66,6 +67,7 @@ public:
     ) override {};
 
     bool exists(const eevm::Address& address);
+    bool exists(const eosio::name& account);
 
     virtual const eevm::Block& get_current_block() override;
     virtual uint256_t get_block_hash(uint8_t offset) override;
