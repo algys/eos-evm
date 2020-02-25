@@ -132,18 +132,13 @@ public:
     void create(const name& creator, const std::string& input_string) {
         require_auth(creator);
         eos_evm::EosGlobalState gs(_self);
-        const auto keccak_hash = keccak_256(rlp::encode(creator.to_string(), input_string));
-        const std::string rightmost_bytes(keccak_hash.begin(), keccak_hash.begin() + 20);
+        const auto keccak = keccak_256(rlp::encode(creator.to_string(), input_string));
+        const auto hex_keccak = to_hex_string(keccak);
+        const std::string rightmost_bytes(hex_keccak.begin(), hex_keccak.begin() + 22); // including "0x"
         Address eth_address = to_uint256(rightmost_bytes);
-        eosio_assert(gs.exists(eth_address), "creator account already exists");
-        gs.create(eth_address, 0, {});
-    }
-
-    [[eosio::action]]
-    void deploy(const name& creator) {
-        require_auth(creator);
-        const auto keccak_hash = keccak_256(rlp::encode(creator.to_string()));
+        eosio_assert(!gs.exists(eth_address), "creator account already exists");
+        gs.create(creator, eth_address, 0, {});
     }
 };
 
-EOSIO_DISPATCH(evm, (raw)(create)(deploy))
+EOSIO_DISPATCH(evm, (raw)(create))
