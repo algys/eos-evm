@@ -138,6 +138,12 @@ public:
         eosio_assert(gs.exists(eth_address), "creator account already exists");
         gs.create(eth_address, 0, {});
     }
+
+    [[eosio::action]]
+    void deploy(const name& creator) {
+        require_auth(creator);
+        const auto keccak_hash = keccak_256(rlp::encode(creator.to_string()));
+    }
 };
 
-EOSIO_DISPATCH(evm, (raw)(create))
+EOSIO_DISPATCH(evm, (raw)(create)(deploy))
