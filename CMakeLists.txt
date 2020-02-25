@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 project(eos-evm)
+find_package(eosio.cdt)
+
 set(EOSIO_WASM_OLD_BEHAVIOR "Off")
 set(CMAKE_AR "/usr/local/bin/eosio-ar")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-cpp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-cpp")
-include(ExternalProject)
-find_package(eosio.cdt)
+# include(ExternalProject)
+
 add_subdirectory(evm-contract)
 add_subdirectory(libs/eEVM)
 

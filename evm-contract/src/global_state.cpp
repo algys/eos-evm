@@ -1,6 +1,6 @@
 #include <eos-evm/evm/global_state.h>
 
-#include <eosio/eosio.hpp>
+#include <eosiolib/eosio.hpp>
 
 
 namespace eos_evm

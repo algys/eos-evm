@@ -1,4 +1,4 @@
-#include <eosio/eosio.hpp>
+#include <eosiolib/eosio.hpp>
 
 #include <string>
 #include <vector>
@@ -102,7 +102,7 @@ public:
         eos_evm::EosGlobalState gs(_self);
 
         // Check `to` account
-        eosio::check(gs.exists(trx.to), "'to' account doesn't exists");
+        eosio_assert(gs.exists(trx.to), "'to' account doesn't exists");
 
         // Fetch `to` account
         const eevm::AccountState contract = gs.get(trx.to);
@@ -120,7 +120,7 @@ public:
 
         // Check the response
         if (e.er != eevm::ExitReason::returned) {
-            eosio::check(false, "EVM error"); //TODO detailed error
+            eosio_assert(false, "EVM error"); //TODO detailed error
         }
 
         // Create string from response data, and print it TODO normal print
@@ -135,7 +135,7 @@ public:
         const auto keccak_hash = keccak_256(rlp::encode(creator.to_string(), input_string));
         const std::string rightmost_bytes(keccak_hash.begin(), keccak_hash.begin() + 20);
         Address eth_address = to_uint256(rightmost_bytes);
-        check(gs.exists(eth_address), "creator account already exists");
+        eosio_assert(gs.exists(eth_address), "creator account already exists");
         gs.create(eth_address, 0, {});
     }
 };

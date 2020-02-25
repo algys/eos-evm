@@ -2,8 +2,8 @@
 
 #include <eEVM/account.h>
 
-#include <eosio/eosio.hpp>
-#include <eosio/asset.hpp>
+#include <eosiolib/eosio.hpp>
+#include <eosiolib/asset.hpp>
 
 #include <eos-evm/evm/types.h>
 

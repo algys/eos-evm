@@ -5,9 +5,9 @@
 #include <eos-evm/evm/storage.h>
 #include <eos-evm/evm/account.h>
 
-#include <eosio/eosio.hpp>
-#include <eosio/name.hpp>
-#include <eosio/transaction.hpp>
+#include <eosiolib/eosio.hpp>
+#include <eosiolib/name.hpp>
+#include <eosiolib/transaction.hpp>
 
 
 namespace eos_evm
@@ -42,10 +42,10 @@ public:
         acc_map_table(evm_contract_, evm_contract.value)
     {
         cur_block = eevm::Block {
-            static_cast<uint64_t>(eosio::tapos_block_num()), // number, for now unavailable to fetch real block num
+            static_cast<uint64_t>(tapos_block_num()), // number, for now unavailable to fetch real block num
             0u, // difficulty
             0xfffffff, // gas limit
-            eosio::current_time_point().sec_since_epoch(), // timestamp
+            current_time(), // timestamp
             0u // coinbase
         };
     }
